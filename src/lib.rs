@@ -36,11 +36,6 @@ impl Preprocessor for LastChanged {
         };
         log::debug!("Repository URL: {}", repository_url);
 
-        if !repository_url.contains("github.com") {
-            log::trace!("git-repository-url is not a GitHub URL: {repository_url:?}");
-            return Ok(book);
-        }
-
         let mut res = None;
         book.for_each_mut(|item: &mut BookItem| {
             if let Some(Err(_)) = res {
@@ -94,7 +89,7 @@ fn last_changed(
     let modification = get_last_modification(git_root, &path);
     let text = match modification {
         Ok((date, commit)) => {
-            let url = format!("{}/commit/{}", base_url, commit);
+            let url = format!("{}/-/commit/{}", base_url, commit);
             format!(
                 "Last change: {}, commit: <a href=\"{}\">{}</a>",
                 date, url, commit
